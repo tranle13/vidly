@@ -4,6 +4,14 @@ const Joi = require("joi");
 const { User, validate } = require("../models/user");
 const express = require("express");
 const router = express.Router();
+const auth = require("../middleware/auth");
+
+// GET log in
+router.get("/me", auth, async (req, res) => {
+  // req.user._id comes from jwt
+  const user = User.findById(req.user._id).select("-password");
+  res.send(user);
+});
 
 // POST register
 router.post("/", async (req, res) => {
