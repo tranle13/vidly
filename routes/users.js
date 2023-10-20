@@ -18,7 +18,11 @@ router.post("/", async (req, res) => {
   user.password = await bcrypt.hash(user.password, salt);
   await user.save();
 
-  res.send(_.pick(user, ["_id", "name", "email"]));
+  // this could be stored on the client to get info about current user
+  const token = user.generateAuthToken();
+  res
+    .header("x-auth-token", token)
+    .send(_.pick(user, ["_id", "name", "email"]));
 });
 
 function validateUser(user) {
